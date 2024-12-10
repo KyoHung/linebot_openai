@@ -28,7 +28,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def GPT_response(text):
     # 接收回應
-    response = openai.Completion.create(model="gpt-4o", prompt=text, temperature=0.5, max_tokens=500)
+    response = openai.Completion.create(model="gpt-4o-instruct", prompt=text, temperature=0.5, max_tokens=500)
     print(response)
     # 重組回應
     answer = response['choices'][0]['text'].replace('。','')
@@ -51,6 +51,7 @@ def callback():
     return 'OK'
 
 
+# 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
@@ -63,11 +64,12 @@ def handle_message(event):
         error_message = str(e)  # 取得異常的字串表示
         print(traceback.format_exc())
         line_bot_api.reply_message(event.reply_token, TextSendMessage(f'錯誤: {error_message}'))
+        
 
 @handler.add(PostbackEvent)
-def handle_postback(event):  # 改名以避免衝突
+def handle_message(event):
     print(event.postback.data)
-    
+
 
 @handler.add(MemberJoinedEvent)
 def welcome(event):

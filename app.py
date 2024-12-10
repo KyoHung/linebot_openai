@@ -32,16 +32,19 @@ def GPT_response(text):
     full_prompt = f"{role_prompt}\n用戶: {text}\n聖誕老人:"
 
     # 接收回應
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4o",
-        prompt=full_prompt,
+        messages=[
+            {"role": "system", "content": role_prompt},
+            {"role": "user", "content": text}
+        ],
         temperature=0.5,
         max_tokens=500
     )
     print(response)
-    
+
     # 重組回應
-    answer = response['choices'][0]['text'].strip()  # 去除多餘的空白
+    answer = response['choices'][0]['message']['content'].strip()  # 去除多餘的空白
     return answer
 
 # 監聽所有來自 /callback 的 Post Request

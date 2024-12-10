@@ -27,13 +27,22 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 def GPT_response(text):
-    # 接收回應
-    response = openai.Completion.create(model="gpt-4o", prompt=text, temperature=0.5, max_tokens=500)
-    print(response)
-    # 重組回應
-    answer = response['choices'][0]['text'].replace('。','')
-    return answer
+    # 設定角色提示
+    role_prompt = "你是一位慈祥的聖誕老人，專門為小孩帶來歡樂與愛。"
+    full_prompt = f"{role_prompt}\n用戶: {text}\n聖誕老人:"
 
+    # 接收回應
+    response = openai.Completion.create(
+        model="gpt-4o",
+        prompt=full_prompt,
+        temperature=0.5,
+        max_tokens=500
+    )
+    print(response)
+    
+    # 重組回應
+    answer = response['choices'][0]['text'].strip()  # 去除多餘的空白
+    return answer
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])

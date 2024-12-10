@@ -33,7 +33,7 @@ def GPT_response(text):
 
     # 接收回應
     response = openai.ChatCompletion.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": role_prompt},
             {"role": "user", "content": text}

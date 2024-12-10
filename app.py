@@ -51,7 +51,6 @@ def callback():
     return 'OK'
 
 
-# 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
@@ -60,8 +59,10 @@ def handle_message(event):
         print(GPT_answer)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
     except Exception as e:
+        # 顯示異常原因
+        error_message = str(e)  # 取得異常的字串表示
         print(traceback.format_exc())
-        line_bot_api.reply_message(event.reply_token, TextSendMessage('你所使用的OPENAI API key額度可能已經超過，請於後台Log內確認錯誤訊息'))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(f'錯誤: {error_message}'))
 
 @handler.add(PostbackEvent)
 def handle_postback(event):  # 改名以避免衝突
